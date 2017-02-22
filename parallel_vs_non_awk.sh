@@ -1,5 +1,6 @@
 #!/bin/bash
-
+## Use: ps -A | awk '{print $4}' | grep "^awk$" | echo "`wc -l` - 1" | bc
+## to monitor the number of running 'awk' processes.
 rm -f temp.txt bigfile.txt
 
 for((i=0; i<10000; ++i)); do

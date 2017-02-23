@@ -10,5 +10,5 @@ awk '
 END {
     for(i=1; s[i]!=""; ++i)
         print s[i];
-}' file.txt
+}' $1
 

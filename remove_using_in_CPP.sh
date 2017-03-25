@@ -9,7 +9,7 @@ fi
 
 REGEX="\(using $1::\)\{1\}[^\;]*\;"
 grep -p "$REGEX" $2 > ./tmp
-sed "s/using std:://g; s/\;//g" ./tmp  > ./tmp2
+sed "s/using $1:://g; s/\;//g" ./tmp  > ./tmp2
 mv ./tmp2 ./tmp
 
 if [ "$3" == "-freq" ]; then
@@ -26,8 +26,8 @@ read reply
 # perl: cat OOP/HW1/SubFactorial.cpp | perl -ne 's/(?<!std::)cout/std::cout/g; print;'
 if [ "$reply" == "Y" ] || [ "$reply" == "y" ]; then
     cp $2 "$2.old"
-    VAR=`awk ' BEGIN {ORS=" "} {
-    print "s\/\(\?\<\!std\:\:\)(\?\<\!include<)(\?\<\!include <) *" $1 "\/std::" $1 "\/g;"
+    VAR=`awk -v x=$1 ' BEGIN {ORS=" "} {
+    print "s\/\(\?\<\!" x "\:\:\)(\?\<\!include<)(\?\<\!include <) *" $1 "\/" x "::" $1 "\/g;"
     
 }' ./result.txt`
     LEN=`echo "${#VAR} - 1" | bc`
@@ -35,7 +35,7 @@ if [ "$reply" == "Y" ] || [ "$reply" == "y" ]; then
     echo "Some regex:"
     echo $SUB
     rm -f ./tmp2
-    sed "s/[[:blank:]]{2,}/ /g" $2 > ./tmp2 ## trim whitespace
+    cat $2 | perl -ne 's/[[:space:]]{2,}/ /g; print;' > ./tmp2
     if [ "$(which parallel)" != "" ]; then
         cat ./tmp2 | parallel --pipe "perl -ne \"$SUB ; print ;\" " > ./tmp3
     else
@@ -44,9 +44,11 @@ if [ "$reply" == "Y" ] || [ "$reply" == "y" ]; then
     rm -f indent.src ./tmp2
     echo "gg=G" >> indent.src
     echo ":wq" >> indent.src
-    vim -s indent.src ./tmp3
-    mv ./tmp3 $2
-    rm -f indent.src ./tmp3
+    sed -e "s/using *$1::.*;//g" -e "/^[[:blank:]]*$/d" ./tmp3 > ./tmp4  # delete using statement, delete empty line (include blank lines)
+    rm ./tmp3
+    vim -s indent.src ./tmp4
+    mv ./tmp4 $2
+    rm -f indent.src ./tmp4
 else
     echo "Okay, bye!"
 fi

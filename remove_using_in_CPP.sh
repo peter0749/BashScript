@@ -1,6 +1,5 @@
 #!/bin/bash
 
-ARR=()
 REGEX="\(using std::\)\{1\}[^\;]*\;"
 grep -p "$REGEX" $1 > ./tmp
 sed "s/using std:://g; s/\;//g" ./tmp  > ./tmp2

@@ -27,7 +27,7 @@ read reply
 if [ "$reply" == "Y" ] || [ "$reply" == "y" ]; then
     cp $2 "$2.old"
     VAR=`awk -v x=$1 ' BEGIN {ORS=" "} {
-    print "s\/\(\?\<\!" x "\:\:\)(\?\<\!include<)(\?\<\!include <) *" $1 "\/" x "::" $1 "\/g;"
+    print "s\/\(\?\<\!" x "\:\:\)(\?\<\!include<)(\?\<\!include <) *" $1 "\/ " x "::" $1 " \/g;"
     
 }' ./result.txt`
     LEN=`echo "${#VAR} - 1" | bc`

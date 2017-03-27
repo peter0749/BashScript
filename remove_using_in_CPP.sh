@@ -7,9 +7,9 @@ if [[ $# -lt 2 ]]; then
     exit;
 fi
 
-REGEX="\(using $1::\)\{1\}[^\;]*\;"
+REGEX="\(using[[:blank:]]\+$1::\)\{1\}[^\;]*\;"
 grep -p "$REGEX" $2 > ./tmp
-sed "s/using $1:://g; s/\;//g" ./tmp  > ./tmp2
+cat ./tmp | perl -ne "s/using[[:blank:]]+$1:://g; s/\;//g; print;" > ./tmp2
 mv ./tmp2 ./tmp
 
 if [ "$3" == "-freq" ]; then
@@ -44,9 +44,11 @@ if [ "$reply" == "Y" ] || [ "$reply" == "y" ]; then
     rm -f indent.src ./tmp2
     echo "gg=G" >> indent.src
     echo ":wq" >> indent.src
-    sed -e "s/using *$1::.*;//g" -e "/^[[:blank:]]*$/d" ./tmp3 > ./tmp4  # delete using statement, delete empty line (include blank lines)
+    cat ./tmp3 | perl -ne "s/using[[:blank:]]+$1::.*;//g; print;" | sed -e "/^[[:blank:]]*$/d" > ./tmp4
+    # delete using statement, delete empty line (include blank lines)
     rm ./tmp3
     vim -s indent.src ./tmp4
+    cat ./tmp4
     mv ./tmp4 $2
     rm -f indent.src ./tmp4
 else

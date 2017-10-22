@@ -9,6 +9,10 @@ try:
 except:
     exit(1)
 
+if len(patt)<2:
+    os.unlink(fn)
+    exit(1)
+
 if len(patt[0])!=len(patt[1]):
     exit(0)
 

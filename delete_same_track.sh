@@ -4,7 +4,10 @@ import os
 import midi
 
 fn = str(sys.argv[1])
-patt = midi.read_midifile(fn)
+try:
+    patt = midi.read_midifile(fn)
+except:
+    exit(1)
 
 if len(patt[0])!=len(patt[1]):
     exit(0)

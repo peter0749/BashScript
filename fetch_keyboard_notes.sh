@@ -4,7 +4,13 @@ tmpfile=$(mktemp)
 output=$(mktemp)
 tracknum=$(mktemp)
 
-midicsv "$1" "$tmpfile"
+if ! midicsv "$1" "$tmpfile"; then
+    rm "$tracknum"
+    rm "$tmpfile"
+    rm "$output"
+    exit 1
+fi
+FAIL=0
 
 ts=1
 grep Program_c "$tmpfile" | awk 'BEGIN{ FS="," } {if($5<8) print $1}' > "$tracknum"
@@ -20,10 +26,12 @@ cat "$tracknum" | while read line
 
 tail -n1 "$tmpfile" >> "$output"
 
-csvmidi "$output" "$2"
+if ! csvmidi "$output" "$2"; then
+    FAIL=1
+fi
 
 rm "$tracknum"
 rm "$tmpfile"
 rm "$output"
 
-exit 0
+exit $FAIL

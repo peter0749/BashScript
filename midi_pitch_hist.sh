@@ -11,7 +11,7 @@ if [[ $colCnt -lt 5 ]]; then
     exit 1 ## error
 fi
 
-grep Note_on_c "$csvfile" | tr -d ' ' | awk ' BEGIN{ FS="," } { S[$5]++; } END{ for(v in S){ print v " " S[v] } } ' | sort -n -k1
+grep Note_on_c "$csvfile" | tr -d ' ' | awk ' BEGIN{ FS="," } { S[$5%12]++; } END{ for(v in S){ print v " " S[v] } } ' | sort -n -k1
 
 rm "$csvfile"
 

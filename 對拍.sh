@@ -4,7 +4,7 @@ or just:
 O1="$(mktemp)"
 O2="$(mktemp)"
 tee >("./$1" > "$O1")  >("./$2" > "$O2") > /dev/null
-if sync && diff "$O1" "$O2" &> /dev/null; then
+if sync && diff "$O1" "$O2"; then
     echo "AC"
 else
     echo "WA"
@@ -20,7 +20,7 @@ fi
 OUTPUT1="$(mktemp -t oj-test-input-1-XXXXXX)"
 OUTPUT2="$(mktemp -t oj-test-input-2-XXXXXX)"
 tee >("./$program1" > "$OUTPUT1")  >("./$program2" > "$OUTPUT2") > /dev/null
-if sync && diff "$OUTPUT1" "$OUTPUT2" &> /dev/null; then
+if sync && diff "$OUTPUT1" "$OUTPUT2"; then
     echo "AC"
 else
     echo "WA"

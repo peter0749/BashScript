@@ -1,4 +1,16 @@
 #!/bin/bash
+<<COMM
+or just:
+
+OUTPUT1="$(mktemp -t oj-test-input-1-XXXXXX)"
+OUTPUT2="$(mktemp -t oj-test-input-2-XXXXXX)"
+tee >("./$program1" > "$OUTPUT1")  >("./$program2" > "$OUTPUT2") > /dev/null
+if sync && diff -w -q "$OUTPUT1" "$OUTPUT2" &> /dev/null; then
+    echo "AC"
+else
+    echo "WA"
+fi
+COMM
 if [[ $# -ge 2 ]]; then
     program1="$1"
     program2="$2"

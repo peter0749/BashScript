@@ -1,0 +1,18 @@
+#!/bin/bash
+if [[ $# -ge 2 ]]; then
+    program1="$1"
+    program2="$2"
+else
+    >&2 echo "Usage: $0 program1 program2"
+    exit 1
+fi
+OUTPUT1="$(mktemp -u -t oj-test-input-1-XXXXXX)"
+OUTPUT2="$(mktemp -u -t oj-test-input-2-XXXXXX)"
+tee >("./$program1" > "$OUTPUT1")  >("./$program2" > "$OUTPUT2") > /dev/null
+if sync && diff -w -q "$OUTPUT1" "$OUTPUT2" &> /dev/null; then
+    echo "AC"
+else
+    echo "WA"
+fi
+rm "$OUTPUT1"
+rm "$OUTPUT2"

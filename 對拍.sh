@@ -6,8 +6,8 @@ else
     >&2 echo "Usage: $0 program1 program2"
     exit 1
 fi
-OUTPUT1="$(mktemp -u -t oj-test-input-1-XXXXXX)"
-OUTPUT2="$(mktemp -u -t oj-test-input-2-XXXXXX)"
+OUTPUT1="$(mktemp -t oj-test-input-1-XXXXXX)"
+OUTPUT2="$(mktemp -t oj-test-input-2-XXXXXX)"
 tee >("./$program1" > "$OUTPUT1")  >("./$program2" > "$OUTPUT2") > /dev/null
 if sync && diff -w -q "$OUTPUT1" "$OUTPUT2" &> /dev/null; then
     echo "AC"
